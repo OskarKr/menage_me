@@ -1,0 +1,114 @@
+<div *ngIf="functionality | async as data; else loading">
+  <div class="flex gap-1 items-center mb-8">
+    <a
+      class="text-blue-500 hover:underline"
+      [routerLink]="['/functionalities']"
+    >
+      Functionalities
+    </a>
+    <span>></span>
+    <span>{{ data.name }}</span>
+  </div>
+
+  <div class="flex justify-between gap-4 mb-4">
+    <div class="max-w-lg">
+      <h1 class="text-3xl font-bold mb-2">{{ data.name }}</h1>
+      <p>{{ data.description }}</p>
+    </div>
+
+    <div class="flex gap-2">
+      <button
+        [routerLink]="['/functionalities', data.id, 'edit']"
+        mat-flat-button
+        color="primary"
+      >
+        Edit
+      </button>
+
+      <button
+        [disabled]="isDeletePending"
+        (click)="deleteFunctionality()"
+        mat-flat-button
+        color="warn"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <div class="flex justify-between gap-4 mb-4">
+    <h2 class="text-2xl font-bold">Task list</h2>
+
+    <a
+      mat-flat-button
+      color="primary"
+      [routerLink]="['/functionalities', data.id, 'create-task']"
+    >
+      Create ticket
+    </a>
+  </div>
+
+  <table
+    class="w-full border-collapse border border-slate-500"
+    *ngIf="data.tasks.length; else noData"
+  >
+    <thead>
+      <tr>
+        <th class="border border-slate-600 py-2 px-4 text-left">Name</th>
+        <th class="border border-slate-600 py-2 px-4 text-left">Priority</th>
+        <th class="border border-slate-600 py-2 px-4 text-left">Status</th>
+        <th class="border border-slate-600 py-2 px-4 text-left">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let task of data.tasks">
+        <td class="border border-slate-600 py-2 px-4">
+          {{ task.name }}
+        </td>
+        <td class="border border-slate-600 py-2 px-4">
+          <div
+            [ngClass]="[
+              'inline-block rounded-xl border font-medium px-3 py-1 text-xs',
+              priorityClassNameMap[task.priority]
+            ]"
+          >
+            {{ task.priority }}
+          </div>
+        </td>
+        <td class="border border-slate-600 py-2 px-4">
+          <div
+            [ngClass]="[
+              'inline-block rounded-xl border font-medium px-3 py-1 text-xs',
+              statusClassNameMap[task.status]
+            ]"
+          >
+            {{ task.status }}
+          </div>
+        </td>
+        <td class="border border-slate-600 py-2 px-4">
+          <div class="flex gap-2">
+            <a
+              class="text-blue-500 hover:underline"
+              [routerLink]="['/functionalities', data.id, 'task', task.id]"
+            >
+              Details
+            </a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noData>
+    <div class="flex flex-col gap-2 items-center">
+      <p>This functionality has not tasks.</p>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #loading>
+  <div class="flex justify-center py-10">
+    <mat-spinner />
+  </div>
+</ng-template>

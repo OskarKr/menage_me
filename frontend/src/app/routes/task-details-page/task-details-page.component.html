@@ -1,0 +1,86 @@
+<div *ngIf="task | async as data; else loading">
+  <div class="flex gap-1 items-center mb-8">
+    <a
+      class="text-blue-500 hover:underline"
+      [routerLink]="['/functionalities']"
+    >
+      Functionalities
+    </a>
+    <span>></span>
+    <a
+      class="text-blue-500 hover:underline"
+      [routerLink]="['/functionalities', data.functionality.id, 'details']"
+    >
+      {{ data.functionality.name }}
+    </a>
+    <span>></span>
+    <span>{{ data.name }}</span>
+  </div>
+
+  <div class="flex justify-between gap-4 mb-4">
+    <div class="max-w-2xl">
+      <div class="flex gap-8 mb-4">
+        <div class="flex items-center gap-2">
+          <p class="font-medium">Status:</p>
+          <div
+            [ngClass]="[
+              'inline-block rounded-xl border font-medium px-3 py-1 text-xs',
+              statusClassNameMap[data.status]
+            ]"
+          >
+            {{ data.status }}
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <p class="font-medium">Priority:</p>
+          <div
+            [ngClass]="[
+              'inline-block rounded-xl border font-medium px-3 py-1 text-xs',
+              priorityClassNameMap[data.priority]
+            ]"
+          >
+            {{ data.priority }}
+          </div>
+        </div>
+      </div>
+
+      <h1 class="text-3xl font-bold mb-2">
+        {{ data.functionality.name }} - {{ data.name }}
+      </h1>
+
+      <p>{{ data.description }}</p>
+    </div>
+
+    <div class="flex gap-2">
+      <button
+        [routerLink]="[
+          '/functionalities',
+          data.functionality.id,
+          'task',
+          data.id,
+          'edit'
+        ]"
+        mat-flat-button
+        color="primary"
+      >
+        Edit
+      </button>
+
+      <button
+        [disabled]="isDeletePending"
+        (click)="deleteTask()"
+        mat-flat-button
+        color="warn"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="flex justify-center py-10">
+    <mat-spinner />
+  </div>
+</ng-template>
